@@ -29,4 +29,14 @@ class EvaluatorTest {
     Symbol sym = new Symbol("x");
     assertEquals(sym, new Evaluator().eval(new Variable(sym), name -> name, v -> v));
   }
+
+  @Test
+  void evalConditional() {
+    Symbol yes = new Symbol("yes");
+    Symbol no = new Symbol("no");
+    assertEquals(yes, new Evaluator()
+        .eval(new Conditional(new Quotation(new Bool(true)), new Quotation(yes), new Quotation(no)), null, v -> v));
+    assertEquals(no, new Evaluator()
+        .eval(new Conditional(new Quotation(new Bool(false)), new Quotation(yes), new Quotation(no)), null, v -> v));
+  }
 }

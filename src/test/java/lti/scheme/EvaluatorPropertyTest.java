@@ -13,7 +13,7 @@ class EvaluatorPropertyTest {
     @Property
     void quotationReturnsItsValue(@ForAll("symbols") Symbol symbol) {
         var quotation = new Quotation(symbol);
-        var result = evaluator.eval(quotation, null);
+        var result = evaluator.eval(quotation, null,v->v);
         assertEquals(symbol, result);
     }
 
@@ -21,16 +21,16 @@ class EvaluatorPropertyTest {
     void variableLookupReturnsEnvironmentValue(@ForAll("symbols") Symbol name, @ForAll("symbols") Symbol value) {
         var variable = new Variable(name);
         Environment env = n -> n.equals(name) ? value : null;
-        var result = evaluator.eval(variable, env);
+        var result = evaluator.eval(variable, env,v->v);
         assertEquals(value, result);
     }
 
     @Property
     void quotationOfQuotationIsIdempotent(@ForAll("symbols") Symbol symbol) {
         var quotation = new Quotation(symbol);
-        var result1 = evaluator.eval(quotation, null);
+        var result1 = evaluator.eval(quotation, null,v->v);
         var quotation2 = new Quotation(result1);
-        var result2 = evaluator.eval(quotation2, null);
+        var result2 = evaluator.eval(quotation2, null,v->v);
         assertEquals(result1, result2);
     }
 
