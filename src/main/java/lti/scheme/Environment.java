@@ -2,6 +2,7 @@ package lti.scheme;
 
 import lti.scheme.Value.*;
 
-public interface Environment {
+@FunctionalInterface
+interface Environment {
   Value lookup(Symbol name);
 }

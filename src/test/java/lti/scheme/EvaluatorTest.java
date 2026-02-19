@@ -21,11 +21,12 @@ class EvaluatorTest {
   @Test
   void evalQuotation() {
     Value val = new Symbol("x");
-    assertEquals(val, new Evaluator().eval(new Quotation(val), null));
+    assertEquals(val, new Evaluator().eval(new Quotation(val), null, v -> v));
   }
+
   @Test
   void evalVariable() {
     Symbol sym = new Symbol("x");
-    assertEquals(sym, new Evaluator().eval(new Variable(sym), name -> name));
+    assertEquals(sym, new Evaluator().eval(new Variable(sym), name -> name, v -> v));
   }
 }

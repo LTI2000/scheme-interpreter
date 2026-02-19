@@ -4,10 +4,10 @@ import lti.scheme.Expression.*;
 import lti.scheme.Value.*;
 
 public final class Evaluator {
-  public Value eval(Expression exp, Environment env) {
+  public Value eval(Expression exp, Environment env, Continuation<Value,Value> k) {
     return switch (exp) {
-      case Quotation(Value value) -> value;
-      case Variable(Symbol name) -> env.lookup(name);
+      case Quotation(var value) -> value;
+      case Variable(var name) -> env.lookup(name);
       case Abstraction abstraction -> null;
       case Conditional conditional -> null;
     };

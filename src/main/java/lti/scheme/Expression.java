@@ -2,7 +2,7 @@ package lti.scheme;
 
 import lti.scheme.Value.*;
 
-public sealed interface Expression {
+sealed interface Expression {
   record Quotation(Value value)
           implements Expression {
   }
