@@ -1,6 +1,6 @@
 package lti.scheme;
 
 @FunctionalInterface
-interface Continuation<V,A> {
+interface Continuation<V, A> {
   A apply(V v);
 }
