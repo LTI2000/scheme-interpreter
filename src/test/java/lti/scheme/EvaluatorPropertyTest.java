@@ -11,9 +11,9 @@ class EvaluatorPropertyTest {
     private final Evaluator evaluator = new Evaluator();
 
     @Property
-    void quotationReturnsItsValue(@ForAll("symbols") Symbol symbol) {
-        var quotation = new Quotation(symbol);
-        var result = evaluator.eval(quotation, null,v->v);
+    void literalReturnsItsValue(@ForAll("symbols") Symbol symbol) {
+        var literal = new Literal(symbol);
+        var result = evaluator.eval(literal, null,v->v);
         assertEquals(symbol, result);
     }
 
@@ -26,11 +26,11 @@ class EvaluatorPropertyTest {
     }
 
     @Property
-    void quotationOfQuotationIsIdempotent(@ForAll("symbols") Symbol symbol) {
-        var quotation = new Quotation(symbol);
-        var result1 = evaluator.eval(quotation, null,v->v);
-        var quotation2 = new Quotation(result1);
-        var result2 = evaluator.eval(quotation2, null,v->v);
+    void literalOfLiteralIsIdempotent(@ForAll("symbols") Symbol symbol) {
+        var literal = new Literal(symbol);
+        var result1 = evaluator.eval(literal, null,v->v);
+        var literal2 = new Literal(result1);
+        var result2 = evaluator.eval(literal2, null,v->v);
         assertEquals(result1, result2);
     }
 

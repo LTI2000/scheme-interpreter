@@ -19,9 +19,9 @@ class EvaluatorTest {
   }
 
   @Test
-  void evalQuotation() {
+  void evalLiteral() {
     Value val = new Symbol("x");
-    assertEquals(val, new Evaluator().eval(new Quotation(val), null, v -> v));
+    assertEquals(val, new Evaluator().eval(new Literal(val), null, v -> v));
   }
 
   @Test
@@ -35,8 +35,8 @@ class EvaluatorTest {
     Symbol yes = new Symbol("yes");
     Symbol no = new Symbol("no");
     assertEquals(yes, new Evaluator()
-        .eval(new Conditional(new Quotation(new Bool(true)), new Quotation(yes), new Quotation(no)), null, v -> v));
+        .eval(new Conditional(new Literal(new Bool(true)), new Literal(yes), new Literal(no)), null, v -> v));
     assertEquals(no, new Evaluator()
-        .eval(new Conditional(new Quotation(new Bool(false)), new Quotation(yes), new Quotation(no)), null, v -> v));
+        .eval(new Conditional(new Literal(new Bool(false)), new Literal(yes), new Literal(no)), null, v -> v));
   }
 }

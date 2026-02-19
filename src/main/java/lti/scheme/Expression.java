@@ -3,7 +3,7 @@ package lti.scheme;
 import lti.scheme.Value.*;
 
 sealed interface Expression {
-  record Quotation(Value value) implements Expression {
+  record Literal(Value value) implements Expression {
   }
 
   record Variable(Symbol name) implements Expression {

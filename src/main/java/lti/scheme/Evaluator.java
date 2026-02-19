@@ -6,7 +6,7 @@ import lti.scheme.Value.*;
 public final class Evaluator {
   public Value eval(Expression exp, Environment env, Continuation<Value, Value> k) {
     return switch (exp) {
-      case Quotation(var value) ->
+      case Literal(var value) ->
         k.apply(value);
       case Variable(var name) ->
         k.apply(env.lookup(name));
