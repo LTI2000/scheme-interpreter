@@ -6,4 +6,7 @@ sealed interface Value {
 
   record Bool(boolean bool) implements Value {
   }
+
+  record Closure(Symbol formal, Expression body, Environment env) implements Value {
+  }
 }

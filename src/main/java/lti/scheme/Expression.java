@@ -12,6 +12,6 @@ sealed interface Expression {
   record Conditional(Expression test, Expression consequent, Expression alternate) implements Expression {
   }
 
-  record Abstraction(String var, Expression body) implements Expression {
+  record Abstraction(Symbol formal, Expression body) implements Expression {
   }
 }

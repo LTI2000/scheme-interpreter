@@ -12,8 +12,8 @@ public final class Evaluator {
         k.apply(env.lookup(name));
       case Conditional(var test, var consequent, var alternate) ->
         eval(test, env, t -> isTrue(t) ? eval(consequent, env, k) : eval(alternate, env, k));
-      case Abstraction abstraction ->
-        null;
+      case Abstraction(var formal, var body) ->
+        k.apply(new Closure(formal, body, env));
     };
   }
 
