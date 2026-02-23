@@ -17,7 +17,10 @@ public final class Evaluator {
   }
 
   public Value apply(Value proc, Value arg, Continuation<Value, Value> k) {
-    return null;
+    return switch (proc) {
+      case Closure(var formal,var body, var env) -> null;
+      default -> throw new Error();
+    };
   }
 
   private boolean isTrue(Value value) {
