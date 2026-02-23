@@ -11,7 +11,7 @@ mvn dependency:get -q \
                    -DgroupId=${GROUP_ID} \
                    -DartifactId=${ARTIFACT_ID} \
                    -Dversion=${VERSION} \
-		   -Dclassifier=${CLASSIFIER} \
+                   -Dclassifier=${CLASSIFIER} \
                    -Dtransitive=false
 
 # Resolve local repository path
