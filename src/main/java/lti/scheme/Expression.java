@@ -9,9 +9,12 @@ sealed interface Expression {
   record Variable(Symbol name) implements Expression {
   }
 
-  record Conditional(Expression test, Expression consequent, Expression alternate) implements Expression {
+  record Abstraction(Symbol formal, Expression body) implements Expression {
   }
 
-  record Abstraction(Symbol formal, Expression body) implements Expression {
+  record Application(Expression operator, Expression operand) implements Expression {
+  }
+
+  record Conditional(Expression test, Expression consequent, Expression alternate) implements Expression {
   }
 }
