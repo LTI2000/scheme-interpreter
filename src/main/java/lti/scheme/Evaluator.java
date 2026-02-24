@@ -18,7 +18,7 @@ public final class Evaluator {
 
   public Value apply(Value proc, Value arg, Continuation<Value, Value> k) {
     return switch (proc) {
-      case Closure(var formal,var body, var env) -> null;
+      case Closure(var formal, var body, var env) -> eval(body, env.extend(formal, arg), k);
       default -> throw new Error();
     };
   }

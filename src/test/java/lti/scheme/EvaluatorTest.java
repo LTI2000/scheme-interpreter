@@ -34,7 +34,6 @@ class EvaluatorTest {
             .eval(
                 new Abstraction(new Symbol("x"), new Variable(new Symbol("x"))),
                 new Environment() {
-
                   @Override
                   public Value lookup(Symbol name) {
                     // TODO Auto-generated method stub
@@ -60,7 +59,7 @@ class EvaluatorTest {
                 new Application(
                     new Abstraction(new Symbol("x"), new Variable(new Symbol("x"))),
                     new Literal(new Bool(false))),
-                name -> name,
+                new InitialEnvironment(),
                 v -> v));
   }
 
