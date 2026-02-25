@@ -1,7 +1,8 @@
-package lti.scheme;
+package lti.scheme.parser;
 
-import lti.scheme.Token.*;
+import lti.scheme.Value;
 import lti.scheme.Value.*;
+import lti.scheme.parser.Token.TokenType;
 
 public final class Parser {
   private static final Symbol QUOTE = new Symbol("quote");
@@ -19,16 +20,17 @@ public final class Parser {
   }
 
   public Value parseValue() throws ParserException, TokenizerException {
-    return switch (current) {
-      case Atom(var text) -> {
+    return switch (current.type()) {
+      case ATOM -> {
+        var text = current.value();
         advance();
         yield parseAtom(text);
       }
-      case LeftParen() -> parseList();
-      case Quote() -> parseQuote();
-      case RightParen() -> throw new ParserException("Unexpected ')'");
-      case Dot() -> throw new ParserException("Unexpected '.'");
-      case Eof() -> throw new ParserException("Unexpected end of input");
+      case LEFT_PAREN -> parseList();
+      case QUOTE -> parseQuote();
+      case RIGHT_PAREN -> throw new ParserException("Unexpected ')'");
+      case DOT -> throw new ParserException("Unexpected '.'");
+      case EOF -> throw new ParserException("Unexpected end of input");
     };
   }
 
@@ -49,20 +51,23 @@ public final class Parser {
 
   private Value parseList() throws ParserException, TokenizerException {
     advance(); // consume '('
-    return parseListTail();
+    return parseListTail(false);
   }
 
-  private Value parseListTail() throws ParserException, TokenizerException {
-    return switch (current) {
-      case RightParen() -> {
+  private Value parseListTail(boolean hasElement) throws ParserException, TokenizerException {
+    return switch (current.type()) {
+      case RIGHT_PAREN -> {
         advance();
         yield new Nil();
       }
-      case Eof() -> throw new ParserException("Unclosed list");
-      case Dot() -> {
+      case EOF -> throw new ParserException("Unclosed list");
+      case DOT -> {
+        if (!hasElement) {
+          throw new ParserException("Unexpected '.' at start of list");
+        }
         advance(); // consume '.'
         var cdr = parseValue();
-        if (!(current instanceof RightParen)) {
+        if (current.type() != TokenType.RIGHT_PAREN) {
           throw new ParserException("Expected ')' after dotted pair");
         }
         advance(); // consume ')'
@@ -70,7 +75,7 @@ public final class Parser {
       }
       default -> {
         var car = parseValue();
-        var cdr = parseListTail();
+        var cdr = parseListTail(true);
         yield new Pair(car, cdr);
       }
     };

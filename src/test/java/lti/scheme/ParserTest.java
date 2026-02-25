@@ -3,6 +3,9 @@ package lti.scheme;
 import static org.junit.jupiter.api.Assertions.*;
 
 import lti.scheme.Value.*;
+import lti.scheme.parser.Parser;
+import lti.scheme.parser.ParserException;
+
 import org.junit.jupiter.api.Test;
 
 class ParserTest {

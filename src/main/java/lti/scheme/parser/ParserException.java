@@ -1,4 +1,4 @@
-package lti.scheme;
+package lti.scheme.parser;
 
 public class ParserException extends RuntimeException {
 
