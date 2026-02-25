@@ -3,11 +3,9 @@ package lti.scheme;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.StringReader;
-
-import org.junit.jupiter.api.Test;
-
-import lti.scheme.parser.Tokenizer;
 import lti.scheme.parser.Token.TokenType;
+import lti.scheme.parser.Tokenizer;
+import org.junit.jupiter.api.Test;
 
 class TokenizerTest {
 

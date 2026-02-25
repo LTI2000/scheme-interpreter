@@ -89,17 +89,17 @@ public final class Tokenizer {
     if (currentChar == -1) {
       return;
     }
-    
+
     boolean wasNewline = currentChar == '\n';
     offset++;
-    
+
     if (wasNewline) {
       line++;
       column = 1;
     } else {
       column++;
     }
-    
+
     readNextChar();
   }
 
