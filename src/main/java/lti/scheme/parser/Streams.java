@@ -9,7 +9,7 @@ public final class Streams {
   private Streams() {
   }
 
-  public Stream<String> lines(BufferedReader reader) {
+  public static Stream<String> lines(BufferedReader reader) {
     return reader.lines().onClose(() -> {
       try {
         reader.close();
@@ -23,7 +23,7 @@ public final class Streams {
   record Line(int lineNumber, String content) {
   }
 
-  public Stream<Line> numberedLines(Stream<String> lines) {
+  public static Stream<Line> numberedLines(Stream<String> lines) {
     AtomicInteger currentLineNumber = new AtomicInteger(0);
     return lines.map(content -> new Line(currentLineNumber.incrementAndGet(), content));
   }
