@@ -8,10 +8,10 @@ public final class Tokenizer {
   private Tokenizer() {}
 
   public static Stream<Token> tokens(Stream<NumberedLine> lines) {
-    return lines.flatMap(line -> tokenizeLine(line).stream());
+    return lines.flatMap(Tokenizer::tokenizeLine);
   }
 
-  private static List<Token> tokenizeLine(NumberedLine numberedLine) {
+  private static Stream<Token> tokenizeLine(NumberedLine numberedLine) {
     List<Token> tokens = new ArrayList<>();
     String line = numberedLine.content();
     int lineNum = numberedLine.lineNumber();
@@ -123,7 +123,7 @@ public final class Tokenizer {
       tokens.add(new Token.Symbol(lineNum, start + 1, symbol));
     }
 
-    return tokens;
+    return tokens.stream();
   }
 
   private static boolean isDelimiter(char c) {
