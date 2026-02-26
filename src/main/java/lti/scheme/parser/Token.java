@@ -2,6 +2,7 @@ package lti.scheme.parser;
 
 public sealed interface Token {
   int lineNumber();
+
   int columnNumber();
 
   record LeftParen(int lineNumber, int columnNumber) implements Token {
