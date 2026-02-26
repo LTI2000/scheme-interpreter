@@ -1,6 +1,7 @@
 package lti.scheme.parser;
 
 import lti.scheme.parser.Token.BooleanLiteral;
+import lti.scheme.parser.Token.Eof;
 import lti.scheme.parser.Token.LeftParen;
 import lti.scheme.parser.Token.NumberLiteral;
 import lti.scheme.parser.Token.Quote;
@@ -102,10 +103,11 @@ class TokenizerTest {
     try (Stream<String> lines = Streams.lines(reader)) {
       List<Token> result = Tokenizer.tokens(Streams.numberedLines(lines)).toList();
 
-      assertEquals(3, result.size());
+      assertEquals(4, result.size());
       assertEquals(new Symbol(1, 1, "define"), result.get(0));
       assertEquals(new Symbol(1, 8, "x"), result.get(1));
       assertEquals(new NumberLiteral(2, 1, 10), result.get(2));
+      assertEquals(new Eof(3, 1), result.get(3));
     }
   }
 

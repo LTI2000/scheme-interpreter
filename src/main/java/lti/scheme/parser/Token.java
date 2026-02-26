@@ -18,4 +18,6 @@ public sealed interface Token {
   record BooleanLiteral(int lineNumber, int columnNumber, boolean value) implements Token {}
 
   record StringLiteral(int lineNumber, int columnNumber, String value) implements Token {}
+
+  record Eof(int lineNumber, int columnNumber) implements Token {}
 }

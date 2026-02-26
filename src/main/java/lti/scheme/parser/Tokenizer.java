@@ -15,9 +15,14 @@ public final class Tokenizer {
     List<Token> tokens = new ArrayList<>();
     String line = numberedLine.content();
     int lineNum = numberedLine.lineNumber();
+
+    if (line == null) {
+      return Stream.of(new Token.Eof(lineNum, 1));
+    }
+
     int i = 0;
 
-    while (line != null && i < line.length()) {
+    while (i < line.length()) {
       char c = line.charAt(i);
 
       // Skip whitespace
