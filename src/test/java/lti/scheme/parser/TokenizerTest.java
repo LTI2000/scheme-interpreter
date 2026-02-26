@@ -21,9 +21,9 @@ class TokenizerTest {
 
   @Test
   void tokensReturnsSymbolsFromLines() {
-    Stream<Line> input = Stream.of(
-            new Line(1, "foo bar"),
-            new Line(2, "baz")
+    Stream<NumberedLine> input = Stream.of(
+            new NumberedLine(1, "foo bar"),
+            new NumberedLine(2, "baz")
     );
     List<Token> result = Tokenizer.tokens(input).toList();
 
@@ -35,7 +35,7 @@ class TokenizerTest {
 
   @Test
   void tokensHandlesMultipleWhitespace() {
-    Stream<Line> input = Stream.of(new Line(1, "  foo   bar  "));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "  foo   bar  "));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(2, result.size());
@@ -45,7 +45,7 @@ class TokenizerTest {
 
   @Test
   void tokensIgnoresComments() {
-    Stream<Line> input = Stream.of(new Line(1, "foo ; this is a comment"));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "foo ; this is a comment"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(1, result.size());
@@ -54,9 +54,9 @@ class TokenizerTest {
 
   @Test
   void tokensIgnoresFullLineComments() {
-    Stream<Line> input = Stream.of(
-            new Line(1, "; comment line"),
-            new Line(2, "actual code")
+    Stream<NumberedLine> input = Stream.of(
+            new NumberedLine(1, "; comment line"),
+            new NumberedLine(2, "actual code")
     );
     List<Token> result = Tokenizer.tokens(input).toList();
 
@@ -67,16 +67,16 @@ class TokenizerTest {
 
   @Test
   void tokensReturnsEmptyStreamForEmptyInput() {
-    Stream<Line> input = Stream.empty();
+    Stream<NumberedLine> input = Stream.empty();
     List<Token> result = Tokenizer.tokens(input).toList();
     assertTrue(result.isEmpty());
   }
 
   @Test
   void tokensReturnsEmptyStreamForBlankLines() {
-    Stream<Line> input = Stream.of(
-            new Line(1, "   "),
-            new Line(2, "\t\t")
+    Stream<NumberedLine> input = Stream.of(
+            new NumberedLine(1, "   "),
+            new NumberedLine(2, "\t\t")
     );
     List<Token> result = Tokenizer.tokens(input).toList();
     assertTrue(result.isEmpty());
@@ -84,7 +84,7 @@ class TokenizerTest {
 
   @Test
   void tokensHandlesTabsAsWhitespace() {
-    Stream<Line> input = Stream.of(new Line(1, "foo\tbar\tbaz"));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "foo\tbar\tbaz"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(3, result.size());
@@ -122,7 +122,7 @@ class TokenizerTest {
 
   @Test
   void tokensRecognizesParentheses() {
-    Stream<Line> input = Stream.of(new Line(1, "(define x 10)"));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "(define x 10)"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(5, result.size());
@@ -135,7 +135,7 @@ class TokenizerTest {
 
   @Test
   void tokensRecognizesNestedParentheses() {
-    Stream<Line> input = Stream.of(new Line(1, "((a))"));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "((a))"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(5, result.size());
@@ -148,7 +148,7 @@ class TokenizerTest {
 
   @Test
   void tokensRecognizesQuote() {
-    Stream<Line> input = Stream.of(new Line(1, "'x"));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "'x"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(2, result.size());
@@ -158,7 +158,7 @@ class TokenizerTest {
 
   @Test
   void tokensRecognizesQuotedList() {
-    Stream<Line> input = Stream.of(new Line(1, "'(a b c)"));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "'(a b c)"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(6, result.size());
@@ -172,7 +172,7 @@ class TokenizerTest {
 
   @Test
   void tokensRecognizesNumbers() {
-    Stream<Line> input = Stream.of(new Line(1, "42 -17 0"));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "42 -17 0"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(3, result.size());
@@ -183,7 +183,7 @@ class TokenizerTest {
 
   @Test
   void tokensRecognizesBooleans() {
-    Stream<Line> input = Stream.of(new Line(1, "#t #f"));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "#t #f"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(2, result.size());
@@ -193,7 +193,7 @@ class TokenizerTest {
 
   @Test
   void tokensRecognizesStringLiterals() {
-    Stream<Line> input = Stream.of(new Line(1, "\"hello world\""));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "\"hello world\""));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(1, result.size());
@@ -202,7 +202,7 @@ class TokenizerTest {
 
   @Test
   void tokensHandlesEscapeSequencesInStrings() {
-    Stream<Line> input = Stream.of(new Line(1, "\"line1\\nline2\\ttab\\\"quote\\\\backslash\""));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "\"line1\\nline2\\ttab\\\"quote\\\\backslash\""));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(1, result.size());
@@ -211,7 +211,7 @@ class TokenizerTest {
 
   @Test
   void tokensRecognizesComplexSExpression() {
-    Stream<Line> input = Stream.of(new Line(1, "(if #t \"yes\" \"no\")"));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "(if #t \"yes\" \"no\")"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(6, result.size());
@@ -225,7 +225,7 @@ class TokenizerTest {
 
   @Test
   void tokensHandlesParensWithoutWhitespace() {
-    Stream<Line> input = Stream.of(new Line(1, "(add(mul 2 3)4)"));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "(add(mul 2 3)4)"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(9, result.size());
@@ -242,7 +242,7 @@ class TokenizerTest {
 
   @Test
   void tokensRecognizesSymbolsWithSpecialChars() {
-    Stream<Line> input = Stream.of(new Line(1, "add+ sub- mul* div/ eq? set!"));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "add+ sub- mul* div/ eq? set!"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(6, result.size());
@@ -256,7 +256,7 @@ class TokenizerTest {
 
   @Test
   void tokensHandlesMinusAsSymbol() {
-    Stream<Line> input = Stream.of(new Line(1, "(- 5 3)"));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "(- 5 3)"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(5, result.size());
@@ -269,7 +269,7 @@ class TokenizerTest {
 
   @Test
   void tokensHandlesHashSymbolsNotBooleans() {
-    Stream<Line> input = Stream.of(new Line(1, "#true #false"));
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "#true #false"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(2, result.size());

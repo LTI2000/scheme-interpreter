@@ -20,8 +20,8 @@ public final class Streams {
     });
   }
 
-  public static Stream<Line> numberedLines(Stream<String> lines) {
+  public static Stream<NumberedLine> numberedLines(Stream<String> lines) {
     AtomicInteger currentLineNumber = new AtomicInteger(0);
-    return lines.map(content -> new Line(currentLineNumber.incrementAndGet(), content));
+    return lines.map(content -> new NumberedLine(currentLineNumber.incrementAndGet(), content));
   }
 }

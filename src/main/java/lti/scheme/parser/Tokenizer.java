@@ -8,18 +8,18 @@ public final class Tokenizer {
   private Tokenizer() {
   }
 
-  public static Stream<Token> tokens(Stream<Line> lines) {
+  public static Stream<Token> tokens(Stream<NumberedLine> lines) {
     return lines.flatMap(line -> tokenizeLine(line).stream());
   }
 
-  private static List<Token> tokenizeLine(Line line) {
+  private static List<Token> tokenizeLine(NumberedLine numberedLine) {
     List<Token> tokens = new ArrayList<>();
-    String content = line.content();
-    int lineNum = line.lineNumber();
+    String line = numberedLine.content();
+    int lineNum = numberedLine.lineNumber();
     int i = 0;
 
-    while (i < content.length()) {
-      char c = content.charAt(i);
+    while (i < line.length()) {
+      char c = line.charAt(i);
 
       // Skip whitespace
       if (Character.isWhitespace(c)) {
@@ -56,10 +56,10 @@ public final class Tokenizer {
         int start = i;
         i++;
         StringBuilder sb = new StringBuilder();
-        while (i < content.length() && content.charAt(i) != '"') {
-          if (content.charAt(i) == '\\' && i + 1 < content.length()) {
+        while (i < line.length() && line.charAt(i) != '"') {
+          if (line.charAt(i) == '\\' && i + 1 < line.length()) {
             i++;
-            char escaped = content.charAt(i);
+            char escaped = line.charAt(i);
             switch (escaped) {
               case 'n' -> sb.append('\n');
               case 't' -> sb.append('\t');
@@ -70,11 +70,11 @@ public final class Tokenizer {
             }
           }
           else {
-            sb.append(content.charAt(i));
+            sb.append(line.charAt(i));
           }
           i++;
         }
-        if (i < content.length()) {
+        if (i < line.length()) {
           i++; // skip closing quote
         }
         tokens.add(new Token.StringLiteral(lineNum, start + 1, sb.toString()));
@@ -82,17 +82,17 @@ public final class Tokenizer {
       }
 
       // Number (including negative numbers)
-      if (Character.isDigit(c) || (c == '-' && i + 1 < content.length() && Character.isDigit(content.charAt(i + 1)))) {
+      if (Character.isDigit(c) || (c == '-' && i + 1 < line.length() && Character.isDigit(line.charAt(i + 1)))) {
         int start = i;
         if (c == '-') {
           i++;
         }
-        while (i < content.length() && Character.isDigit(content.charAt(i))) {
+        while (i < line.length() && Character.isDigit(line.charAt(i))) {
           i++;
         }
         // Check if followed by delimiter (whitespace, paren, or end)
-        if (i == content.length() || isDelimiter(content.charAt(i))) {
-          String numStr = content.substring(start, i);
+        if (i == line.length() || isDelimiter(line.charAt(i))) {
+          String numStr = line.substring(start, i);
           tokens.add(new Token.NumberLiteral(lineNum, start + 1, Long.parseLong(numStr)));
           continue;
         }
@@ -103,11 +103,11 @@ public final class Tokenizer {
       }
 
       // Boolean
-      if (c == '#' && i + 1 < content.length()) {
-        char next = content.charAt(i + 1);
+      if (c == '#' && i + 1 < line.length()) {
+        char next = line.charAt(i + 1);
         if (next == 't' || next == 'f') {
           // Check if followed by delimiter
-          if (i + 2 == content.length() || isDelimiter(content.charAt(i + 2))) {
+          if (i + 2 == line.length() || isDelimiter(line.charAt(i + 2))) {
             tokens.add(new Token.BooleanLiteral(lineNum, i + 1, next == 't'));
             i += 2;
             continue;
@@ -117,10 +117,10 @@ public final class Tokenizer {
 
       // Symbol (identifier)
       int start = i;
-      while (i < content.length() && !isDelimiter(content.charAt(i))) {
+      while (i < line.length() && !isDelimiter(line.charAt(i))) {
         i++;
       }
-      String symbol = content.substring(start, i);
+      String symbol = line.substring(start, i);
       tokens.add(new Token.Symbol(lineNum, start + 1, symbol));
     }
 

@@ -42,33 +42,33 @@ class StreamsTest {
   @Test
   void numberedLinesAddsLineNumbers() {
     Stream<String> input = Stream.of("first", "second", "third");
-    List<Line> result = Streams.numberedLines(input).toList();
+    List<NumberedLine> result = Streams.numberedLines(input).toList();
 
     assertEquals(3, result.size());
-    assertEquals(new Line(1, "first"), result.get(0));
-    assertEquals(new Line(2, "second"), result.get(1));
-    assertEquals(new Line(3, "third"), result.get(2));
+    assertEquals(new NumberedLine(1, "first"), result.get(0));
+    assertEquals(new NumberedLine(2, "second"), result.get(1));
+    assertEquals(new NumberedLine(3, "third"), result.get(2));
   }
 
   @Test
   void numberedLinesReturnsEmptyStreamForEmptyInput() {
     Stream<String> input = Stream.empty();
-    List<Line> result = Streams.numberedLines(input).toList();
+    List<NumberedLine> result = Streams.numberedLines(input).toList();
     assertTrue(result.isEmpty());
   }
 
   @Test
   void numberedLinesSingleLine() {
     Stream<String> input = Stream.of("only line");
-    List<Line> result = Streams.numberedLines(input).toList();
+    List<NumberedLine> result = Streams.numberedLines(input).toList();
 
     assertEquals(1, result.size());
-    assertEquals(new Line(1, "only line"), result.getFirst());
+    assertEquals(new NumberedLine(1, "only line"), result.getFirst());
   }
 
   @Test
-  void lineRecordHasCorrectAccessors() {
-    Line line = new Line(42, "content");
+  void numberedLineRecordHasCorrectAccessors() {
+    NumberedLine line = new NumberedLine(42, "content");
     assertEquals(42, line.lineNumber());
     assertEquals("content", line.content());
   }
@@ -77,12 +77,12 @@ class StreamsTest {
   void linesAndNumberedLinesIntegration() {
     BufferedReader reader = new BufferedReader(new StringReader("alpha\nbeta\ngamma"));
     try (Stream<String> lines = Streams.lines(reader)) {
-      List<Line> result = Streams.numberedLines(lines).toList();
+      List<NumberedLine> result = Streams.numberedLines(lines).toList();
 
       assertEquals(3, result.size());
-      assertEquals(new Line(1, "alpha"), result.get(0));
-      assertEquals(new Line(2, "beta"), result.get(1));
-      assertEquals(new Line(3, "gamma"), result.get(2));
+      assertEquals(new NumberedLine(1, "alpha"), result.get(0));
+      assertEquals(new NumberedLine(2, "beta"), result.get(1));
+      assertEquals(new NumberedLine(3, "gamma"), result.get(2));
     }
   }
 }
