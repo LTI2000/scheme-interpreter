@@ -21,10 +21,7 @@ class TokenizerTest {
 
   @Test
   void tokensReturnsSymbolsFromLines() {
-    Stream<NumberedLine> input = Stream.of(
-            new NumberedLine(1, "foo bar"),
-            new NumberedLine(2, "baz")
-    );
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "foo bar"), new NumberedLine(2, "baz"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(3, result.size());
@@ -54,10 +51,7 @@ class TokenizerTest {
 
   @Test
   void tokensIgnoresFullLineComments() {
-    Stream<NumberedLine> input = Stream.of(
-            new NumberedLine(1, "; comment line"),
-            new NumberedLine(2, "actual code")
-    );
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "; comment line"), new NumberedLine(2, "actual code"));
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(2, result.size());
@@ -74,10 +68,7 @@ class TokenizerTest {
 
   @Test
   void tokensReturnsEmptyStreamForBlankLines() {
-    Stream<NumberedLine> input = Stream.of(
-            new NumberedLine(1, "   "),
-            new NumberedLine(2, "\t\t")
-    );
+    Stream<NumberedLine> input = Stream.of(new NumberedLine(1, "   "), new NumberedLine(2, "\t\t"));
     List<Token> result = Tokenizer.tokens(input).toList();
     assertTrue(result.isEmpty());
   }

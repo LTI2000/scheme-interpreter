@@ -15,12 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EvaluatorTest {
   @BeforeEach
-  void setUp() {
-  }
+  void setUp() {}
 
   @AfterEach
-  void tearDown() {
-  }
+  void tearDown() {}
 
   @Test
   void evalLiteral() {
@@ -36,30 +34,36 @@ class EvaluatorTest {
 
   @Test
   void evalAbstraction() {
-    Value closure = new Evaluator().eval(new Abstraction(new Symbol("x"), new Variable(new Symbol("x"))), new Environment() {
-      @Override
-      public Value lookup(Symbol name) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'lookup'");
-      }
+    Value closure = new Evaluator().eval(new Abstraction(new Symbol("x"), new Variable(new Symbol("x"))),
+        new Environment() {
+          @Override
+          public Value lookup(Symbol name) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'lookup'");
+          }
 
-      public String toString() {
-        return "#<environment>";
-      }
-    }, v -> v);
-    assertEquals("Closure[formal=Symbol[name=x], body=Variable[name=Symbol[name=x]], env=#<environment>]", closure.toString());
+          public String toString() {
+            return "#<environment>";
+          }
+        }, v -> v);
+    assertEquals("Closure[formal=Symbol[name=x], body=Variable[name=Symbol[name=x]], env=#<environment>]",
+        closure.toString());
   }
 
   @Test
   void evalApplication() {
-    assertEquals(new Bool(false), new Evaluator().eval(new Application(new Abstraction(new Symbol("x"), new Variable(new Symbol("x"))), new Literal(new Bool(false))), new InitialEnvironment(), v -> v));
+    assertEquals(new Bool(false), new Evaluator().eval(
+        new Application(new Abstraction(new Symbol("x"), new Variable(new Symbol("x"))), new Literal(new Bool(false))),
+        new InitialEnvironment(), v -> v));
   }
 
   @Test
   void evalConditional() {
     Symbol yes = new Symbol("yes");
     Symbol no = new Symbol("no");
-    assertEquals(yes, new Evaluator().eval(new Conditional(new Literal(new Bool(true)), new Literal(yes), new Literal(no)), null, v -> v));
-    assertEquals(no, new Evaluator().eval(new Conditional(new Literal(new Bool(false)), new Literal(yes), new Literal(no)), null, v -> v));
+    assertEquals(yes, new Evaluator()
+        .eval(new Conditional(new Literal(new Bool(true)), new Literal(yes), new Literal(no)), null, v -> v));
+    assertEquals(no, new Evaluator()
+        .eval(new Conditional(new Literal(new Bool(false)), new Literal(yes), new Literal(no)), null, v -> v));
   }
 }

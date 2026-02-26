@@ -6,8 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public final class Streams {
-  private Streams() {
-  }
+  private Streams() {}
 
   public static Stream<String> lines(BufferedReader reader) {
     return reader.lines().onClose(() -> {

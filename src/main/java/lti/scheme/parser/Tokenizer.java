@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public final class Tokenizer {
-  private Tokenizer() {
-  }
+  private Tokenizer() {}
 
   public static Stream<Token> tokens(Stream<NumberedLine> lines) {
     return lines.flatMap(line -> tokenizeLine(line).stream());
@@ -61,12 +60,12 @@ public final class Tokenizer {
             i++;
             char escaped = line.charAt(i);
             switch (escaped) {
-              case 'n' -> sb.append('\n');
-              case 't' -> sb.append('\t');
-              case 'r' -> sb.append('\r');
+              case 'n'  -> sb.append('\n');
+              case 't'  -> sb.append('\t');
+              case 'r'  -> sb.append('\r');
               case '\\' -> sb.append('\\');
-              case '"' -> sb.append('"');
-              default -> sb.append(escaped);
+              case '"'  -> sb.append('"');
+              default   -> sb.append(escaped);
             }
           }
           else {
