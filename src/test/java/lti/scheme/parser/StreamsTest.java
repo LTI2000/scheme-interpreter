@@ -9,7 +9,9 @@ import java.io.StringReader;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StreamsTest {
   @Test
@@ -31,7 +33,7 @@ class StreamsTest {
   }
 
   @Test
-  void linesClosesReaderOnStreamClose() throws IOException {
+  void linesClosesReaderOnStreamClose() {
     BufferedReader reader = new BufferedReader(new StringReader("test"));
     Stream<String> lines = Streams.lines(reader);
     lines.close();
@@ -42,7 +44,7 @@ class StreamsTest {
   void numberedLinesAddsLineNumbers() {
     Stream<String> input = Stream.of("first", "second", "third");
     List<Line> result = Streams.numberedLines(input).toList();
-    
+
     assertEquals(3, result.size());
     assertEquals(new Line(1, "first"), result.get(0));
     assertEquals(new Line(2, "second"), result.get(1));
@@ -60,7 +62,7 @@ class StreamsTest {
   void numberedLinesSingleLine() {
     Stream<String> input = Stream.of("only line");
     List<Line> result = Streams.numberedLines(input).toList();
-    
+
     assertEquals(1, result.size());
     assertEquals(new Line(1, "only line"), result.getFirst());
   }
@@ -77,7 +79,7 @@ class StreamsTest {
     BufferedReader reader = new BufferedReader(new StringReader("alpha\nbeta\ngamma"));
     try (Stream<String> lines = Streams.lines(reader)) {
       List<Line> result = Streams.numberedLines(lines).toList();
-      
+
       assertEquals(3, result.size());
       assertEquals(new Line(1, "alpha"), result.get(0));
       assertEquals(new Line(2, "beta"), result.get(1));
