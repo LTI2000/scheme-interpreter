@@ -20,9 +20,6 @@ public final class Streams {
     });
   }
 
-  record Line(int lineNumber, String content) {
-  }
-
   public static Stream<Line> numberedLines(Stream<String> lines) {
     AtomicInteger currentLineNumber = new AtomicInteger(0);
     return lines.map(content -> new Line(currentLineNumber.incrementAndGet(), content));

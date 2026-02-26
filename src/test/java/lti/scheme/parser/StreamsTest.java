@@ -1,6 +1,5 @@
 package lti.scheme.parser;
 
-import lti.scheme.parser.Streams.Line;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
