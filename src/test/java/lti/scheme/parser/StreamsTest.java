@@ -14,20 +14,25 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StreamsTest {
   @Test
-  void linesReturnsStreamOfLines() {
+  void linesReturnsStreamOfLinesEndingWithNull() {
     BufferedReader reader = new BufferedReader(new StringReader("line1\nline2\nline3"));
     try (Stream<String> lines = Streams.lines(reader)) {
       List<String> result = lines.toList();
-      assertEquals(List.of("line1", "line2", "line3"), result);
+      assertEquals(4, result.size());
+      assertEquals("line1", result.get(0));
+      assertEquals("line2", result.get(1));
+      assertEquals("line3", result.get(2));
+      assertEquals(null, result.get(3));
     }
   }
 
   @Test
-  void linesReturnsEmptyStreamForEmptyReader() {
+  void linesReturnsStreamWithOnlyNullForEmptyReader() {
     BufferedReader reader = new BufferedReader(new StringReader(""));
     try (Stream<String> lines = Streams.lines(reader)) {
       List<String> result = lines.toList();
-      assertTrue(result.isEmpty());
+      assertEquals(1, result.size());
+      assertEquals(null, result.getFirst());
     }
   }
 
@@ -79,10 +84,11 @@ class StreamsTest {
     try (Stream<String> lines = Streams.lines(reader)) {
       List<NumberedLine> result = Streams.numberedLines(lines).toList();
 
-      assertEquals(3, result.size());
+      assertEquals(4, result.size());
       assertEquals(new NumberedLine(1, "alpha"), result.get(0));
       assertEquals(new NumberedLine(2, "beta"), result.get(1));
       assertEquals(new NumberedLine(3, "gamma"), result.get(2));
+      assertEquals(new NumberedLine(4, null), result.get(3));
     }
   }
 }

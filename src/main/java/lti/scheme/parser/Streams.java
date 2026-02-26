@@ -9,7 +9,7 @@ public final class Streams {
   private Streams() {}
 
   public static Stream<String> lines(BufferedReader reader) {
-    return reader.lines().onClose(() -> {
+    return Stream.concat(reader.lines(), Stream.of((String) null)).onClose(() -> {
       try {
         reader.close();
       }

@@ -17,7 +17,7 @@ public final class Tokenizer {
     int lineNum = numberedLine.lineNumber();
     int i = 0;
 
-    while (i < line.length()) {
+    while (line != null && i < line.length()) {
       char c = line.charAt(i);
 
       // Skip whitespace
