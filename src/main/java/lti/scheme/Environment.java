@@ -1,6 +1,6 @@
 package lti.scheme;
 
-import lti.scheme.Value.*;
+import lti.scheme.Value.Symbol;
 
 @FunctionalInterface
 interface Environment {

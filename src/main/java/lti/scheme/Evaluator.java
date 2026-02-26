@@ -1,7 +1,12 @@
 package lti.scheme;
 
-import lti.scheme.Expression.*;
-import lti.scheme.Value.*;
+import lti.scheme.Expression.Abstraction;
+import lti.scheme.Expression.Application;
+import lti.scheme.Expression.Conditional;
+import lti.scheme.Expression.Literal;
+import lti.scheme.Expression.Variable;
+import lti.scheme.Value.Bool;
+import lti.scheme.Value.Closure;
 
 public final class Evaluator {
   public Value eval(Expression exp, Environment env, Continuation<Value, Value> k) {
@@ -10,9 +15,9 @@ public final class Evaluator {
       case Variable(var name) -> k.apply(env.lookup(name));
       case Abstraction(var formal, var body) -> k.apply(new Closure(formal, body, env));
       case Application(var operator, var operand) ->
-          eval(operator, env, proc -> eval(operand, env, arg -> apply(proc, arg, k)));
+              eval(operator, env, proc -> eval(operand, env, arg -> apply(proc, arg, k)));
       case Conditional(var test, var consequent, var alternate) ->
-          eval(test, env, t -> isTrue(t) ? eval(consequent, env, k) : eval(alternate, env, k));
+              eval(test, env, t -> isTrue(t) ? eval(consequent, env, k) : eval(alternate, env, k));
     };
   }
 

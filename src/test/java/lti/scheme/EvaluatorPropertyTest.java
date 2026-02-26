@@ -1,10 +1,15 @@
 package lti.scheme;
 
-import static org.junit.jupiter.api.Assertions.*;
+import lti.scheme.Expression.Literal;
+import lti.scheme.Expression.Variable;
+import lti.scheme.Value.Symbol;
+import net.jqwik.api.Arbitraries;
+import net.jqwik.api.Arbitrary;
+import net.jqwik.api.ForAll;
+import net.jqwik.api.Property;
+import net.jqwik.api.Provide;
 
-import lti.scheme.Expression.*;
-import lti.scheme.Value.*;
-import net.jqwik.api.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EvaluatorPropertyTest {
 
@@ -18,8 +23,7 @@ class EvaluatorPropertyTest {
   }
 
   @Property
-  void variableLookupReturnsEnvironmentValue(
-      @ForAll("symbols") Symbol name, @ForAll("symbols") Symbol value) {
+  void variableLookupReturnsEnvironmentValue(@ForAll("symbols") Symbol name, @ForAll("symbols") Symbol value) {
     var variable = new Variable(name);
     Environment env = n -> n.equals(name) ? value : null;
     var result = evaluator.eval(variable, env, v -> v);
