@@ -8,6 +8,7 @@ public record Token(TokenType type, String value, Position position) {
     DOT,
     QUOTE,
     ATOM,
+    STRING,
     EOF
   }
 
@@ -29,6 +30,10 @@ public record Token(TokenType type, String value, Position position) {
 
   public static Token atom(String value, Position position) {
     return new Token(TokenType.ATOM, value, position);
+  }
+
+  public static Token string(String value, Position position) {
+    return new Token(TokenType.STRING, value, position);
   }
 
   public static Token eof(Position position) {

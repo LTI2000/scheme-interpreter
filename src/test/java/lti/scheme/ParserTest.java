@@ -112,4 +112,39 @@ class ParserTest {
     // (. a) is invalid - dot at start
     assertThrows(ParserException.class, () -> Parser.parse("(. a)"));
   }
+
+  // String literal tests
+
+  @Test
+  void parseStringLiteral() {
+    assertEquals(new Str("hello"), Parser.parse("\"hello\""));
+  }
+
+  @Test
+  void parseStringWithEscapes() {
+    assertEquals(new Str("hello\nworld"), Parser.parse("\"hello\\nworld\""));
+  }
+
+  @Test
+  void parseEmptyString() {
+    assertEquals(new Str(""), Parser.parse("\"\""));
+  }
+
+  @Test
+  void parseStringInList() {
+    var result = Parser.parse("(print \"hello\")");
+    assertInstanceOf(Pair.class, result);
+    var list = (Pair) result;
+    assertEquals(new Symbol("print"), list.car());
+    assertInstanceOf(Pair.class, list.cdr());
+    var cdr = (Pair) list.cdr();
+    assertEquals(new Str("hello"), cdr.car());
+  }
+
+  @Test
+  void parseQuotedString() {
+    // '"hello"  →  (quote "hello")
+    var result = Parser.parse("'\"hello\"");
+    assertEquals(new Pair(new Symbol("quote"), new Pair(new Str("hello"), new Nil())), result);
+  }
 }

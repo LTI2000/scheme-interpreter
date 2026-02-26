@@ -1,5 +1,7 @@
 package lti.scheme.parser;
 
+import java.util.Iterator;
+import java.util.stream.Stream;
 import lti.scheme.Value;
 import lti.scheme.Value.*;
 import lti.scheme.parser.Token.TokenType;
@@ -7,24 +9,33 @@ import lti.scheme.parser.Token.TokenType;
 public final class Parser {
   private static final Symbol QUOTE = new Symbol("quote");
 
-  private final Tokenizer tokenizer;
+  private final Iterator<Token> tokens;
   private Token current;
 
-  public Parser(Tokenizer tokenizer) throws TokenizerException {
-    this.tokenizer = tokenizer;
-    this.current = tokenizer.nextToken();
+  public Parser(Iterator<Token> tokens) {
+    this.tokens = tokens;
+    advance();
   }
 
-  public static Value parse(String source) throws ParserException, TokenizerException {
-    return new Parser(new Tokenizer(source)).parseValue();
+  public Parser(Stream<Token> tokenStream) {
+    this(tokenStream.iterator());
   }
 
-  public Value parseValue() throws ParserException, TokenizerException {
+  public static Value parse(String source) throws ParserException {
+    return new Parser(Tokenizer.tokenize(source)).parseValue();
+  }
+
+  public Value parseValue() throws ParserException {
     return switch (current.type()) {
       case ATOM -> {
         var text = current.value();
         advance();
         yield parseAtom(text);
+      }
+      case STRING -> {
+        var text = current.value();
+        advance();
+        yield new Str(text);
       }
       case LEFT_PAREN -> parseList();
       case QUOTE -> parseQuote();
@@ -42,19 +53,19 @@ public final class Parser {
     };
   }
 
-  private Value parseQuote() throws ParserException, TokenizerException {
+  private Value parseQuote() throws ParserException {
     advance(); // consume quote token
     var quoted = parseValue();
     // 'expr  →  (quote expr)
     return new Pair(QUOTE, new Pair(quoted, new Nil()));
   }
 
-  private Value parseList() throws ParserException, TokenizerException {
+  private Value parseList() throws ParserException {
     advance(); // consume '('
     return parseListTail(false);
   }
 
-  private Value parseListTail(boolean hasElement) throws ParserException, TokenizerException {
+  private Value parseListTail(boolean hasElement) throws ParserException {
     return switch (current.type()) {
       case RIGHT_PAREN -> {
         advance();
@@ -81,7 +92,10 @@ public final class Parser {
     };
   }
 
-  private void advance() throws TokenizerException {
-    current = tokenizer.nextToken();
+  private void advance() {
+    if (tokens.hasNext()) {
+      current = tokens.next();
+    }
+    // If no more tokens, current stays as EOF (last token should be EOF)
   }
 }
