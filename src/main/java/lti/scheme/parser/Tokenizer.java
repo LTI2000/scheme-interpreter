@@ -34,26 +34,26 @@ public final class Tokenizer {
 
       // Parentheses
       if (c == '(') {
-        tokens.add(new Token.LeftParen(lineNum));
+        tokens.add(new Token.LeftParen(lineNum, i + 1));
         i++;
         continue;
       }
       if (c == ')') {
-        tokens.add(new Token.RightParen(lineNum));
+        tokens.add(new Token.RightParen(lineNum, i + 1));
         i++;
         continue;
       }
 
       // Quote
       if (c == '\'') {
-        tokens.add(new Token.Quote(lineNum));
+        tokens.add(new Token.Quote(lineNum, i + 1));
         i++;
         continue;
       }
 
       // String literal
       if (c == '"') {
-        int start = i + 1;
+        int start = i;
         i++;
         StringBuilder sb = new StringBuilder();
         while (i < content.length() && content.charAt(i) != '"') {
@@ -77,7 +77,7 @@ public final class Tokenizer {
         if (i < content.length()) {
           i++; // skip closing quote
         }
-        tokens.add(new Token.StringLiteral(lineNum, sb.toString()));
+        tokens.add(new Token.StringLiteral(lineNum, start + 1, sb.toString()));
         continue;
       }
 
@@ -93,7 +93,7 @@ public final class Tokenizer {
         // Check if followed by delimiter (whitespace, paren, or end)
         if (i == content.length() || isDelimiter(content.charAt(i))) {
           String numStr = content.substring(start, i);
-          tokens.add(new Token.NumberLiteral(lineNum, Long.parseLong(numStr)));
+          tokens.add(new Token.NumberLiteral(lineNum, start + 1, Long.parseLong(numStr)));
           continue;
         }
         else {
@@ -108,7 +108,7 @@ public final class Tokenizer {
         if (next == 't' || next == 'f') {
           // Check if followed by delimiter
           if (i + 2 == content.length() || isDelimiter(content.charAt(i + 2))) {
-            tokens.add(new Token.BooleanLiteral(lineNum, next == 't'));
+            tokens.add(new Token.BooleanLiteral(lineNum, i + 1, next == 't'));
             i += 2;
             continue;
           }
@@ -121,7 +121,7 @@ public final class Tokenizer {
         i++;
       }
       String symbol = content.substring(start, i);
-      tokens.add(new Token.Symbol(lineNum, symbol));
+      tokens.add(new Token.Symbol(lineNum, start + 1, symbol));
     }
 
     return tokens;

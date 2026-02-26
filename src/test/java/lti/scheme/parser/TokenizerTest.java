@@ -28,9 +28,9 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(3, result.size());
-    assertEquals(new Symbol(1, "foo"), result.get(0));
-    assertEquals(new Symbol(1, "bar"), result.get(1));
-    assertEquals(new Symbol(2, "baz"), result.get(2));
+    assertEquals(new Symbol(1, 1, "foo"), result.get(0));
+    assertEquals(new Symbol(1, 5, "bar"), result.get(1));
+    assertEquals(new Symbol(2, 1, "baz"), result.get(2));
   }
 
   @Test
@@ -39,8 +39,8 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(2, result.size());
-    assertEquals(new Symbol(1, "foo"), result.get(0));
-    assertEquals(new Symbol(1, "bar"), result.get(1));
+    assertEquals(new Symbol(1, 3, "foo"), result.get(0));
+    assertEquals(new Symbol(1, 9, "bar"), result.get(1));
   }
 
   @Test
@@ -49,7 +49,7 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(1, result.size());
-    assertEquals(new Symbol(1, "foo"), result.get(0));
+    assertEquals(new Symbol(1, 1, "foo"), result.get(0));
   }
 
   @Test
@@ -61,8 +61,8 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(2, result.size());
-    assertEquals(new Symbol(2, "actual"), result.get(0));
-    assertEquals(new Symbol(2, "code"), result.get(1));
+    assertEquals(new Symbol(2, 1, "actual"), result.get(0));
+    assertEquals(new Symbol(2, 8, "code"), result.get(1));
   }
 
   @Test
@@ -88,15 +88,21 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(3, result.size());
-    assertEquals(new Symbol(1, "foo"), result.get(0));
-    assertEquals(new Symbol(1, "bar"), result.get(1));
-    assertEquals(new Symbol(1, "baz"), result.get(2));
+    assertEquals(new Symbol(1, 1, "foo"), result.get(0));
+    assertEquals(new Symbol(1, 5, "bar"), result.get(1));
+    assertEquals(new Symbol(1, 9, "baz"), result.get(2));
   }
 
   @Test
   void tokenLineNumberAccessor() {
-    Token token = new Symbol(5, "symbol");
+    Token token = new Symbol(5, 3, "symbol");
     assertEquals(5, token.lineNumber());
+  }
+
+  @Test
+  void tokenColumnNumberAccessor() {
+    Token token = new Symbol(5, 3, "symbol");
+    assertEquals(3, token.columnNumber());
   }
 
   @Test
@@ -106,9 +112,9 @@ class TokenizerTest {
       List<Token> result = Tokenizer.tokens(Streams.numberedLines(lines)).toList();
 
       assertEquals(3, result.size());
-      assertEquals(new Symbol(1, "define"), result.get(0));
-      assertEquals(new Symbol(1, "x"), result.get(1));
-      assertEquals(new NumberLiteral(2, 10), result.get(2));
+      assertEquals(new Symbol(1, 1, "define"), result.get(0));
+      assertEquals(new Symbol(1, 8, "x"), result.get(1));
+      assertEquals(new NumberLiteral(2, 1, 10), result.get(2));
     }
   }
 
@@ -120,11 +126,11 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(5, result.size());
-    assertEquals(new LeftParen(1), result.get(0));
-    assertEquals(new Symbol(1, "define"), result.get(1));
-    assertEquals(new Symbol(1, "x"), result.get(2));
-    assertEquals(new NumberLiteral(1, 10), result.get(3));
-    assertEquals(new RightParen(1), result.get(4));
+    assertEquals(new LeftParen(1, 1), result.get(0));
+    assertEquals(new Symbol(1, 2, "define"), result.get(1));
+    assertEquals(new Symbol(1, 9, "x"), result.get(2));
+    assertEquals(new NumberLiteral(1, 11, 10), result.get(3));
+    assertEquals(new RightParen(1, 13), result.get(4));
   }
 
   @Test
@@ -133,11 +139,11 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(5, result.size());
-    assertEquals(new LeftParen(1), result.get(0));
-    assertEquals(new LeftParen(1), result.get(1));
-    assertEquals(new Symbol(1, "a"), result.get(2));
-    assertEquals(new RightParen(1), result.get(3));
-    assertEquals(new RightParen(1), result.get(4));
+    assertEquals(new LeftParen(1, 1), result.get(0));
+    assertEquals(new LeftParen(1, 2), result.get(1));
+    assertEquals(new Symbol(1, 3, "a"), result.get(2));
+    assertEquals(new RightParen(1, 4), result.get(3));
+    assertEquals(new RightParen(1, 5), result.get(4));
   }
 
   @Test
@@ -146,8 +152,8 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(2, result.size());
-    assertEquals(new Quote(1), result.get(0));
-    assertEquals(new Symbol(1, "x"), result.get(1));
+    assertEquals(new Quote(1, 1), result.get(0));
+    assertEquals(new Symbol(1, 2, "x"), result.get(1));
   }
 
   @Test
@@ -156,12 +162,12 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(6, result.size());
-    assertEquals(new Quote(1), result.get(0));
-    assertEquals(new LeftParen(1), result.get(1));
-    assertEquals(new Symbol(1, "a"), result.get(2));
-    assertEquals(new Symbol(1, "b"), result.get(3));
-    assertEquals(new Symbol(1, "c"), result.get(4));
-    assertEquals(new RightParen(1), result.get(5));
+    assertEquals(new Quote(1, 1), result.get(0));
+    assertEquals(new LeftParen(1, 2), result.get(1));
+    assertEquals(new Symbol(1, 3, "a"), result.get(2));
+    assertEquals(new Symbol(1, 5, "b"), result.get(3));
+    assertEquals(new Symbol(1, 7, "c"), result.get(4));
+    assertEquals(new RightParen(1, 8), result.get(5));
   }
 
   @Test
@@ -170,9 +176,9 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(3, result.size());
-    assertEquals(new NumberLiteral(1, 42), result.get(0));
-    assertEquals(new NumberLiteral(1, -17), result.get(1));
-    assertEquals(new NumberLiteral(1, 0), result.get(2));
+    assertEquals(new NumberLiteral(1, 1, 42), result.get(0));
+    assertEquals(new NumberLiteral(1, 4, -17), result.get(1));
+    assertEquals(new NumberLiteral(1, 8, 0), result.get(2));
   }
 
   @Test
@@ -181,8 +187,8 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(2, result.size());
-    assertEquals(new BooleanLiteral(1, true), result.get(0));
-    assertEquals(new BooleanLiteral(1, false), result.get(1));
+    assertEquals(new BooleanLiteral(1, 1, true), result.get(0));
+    assertEquals(new BooleanLiteral(1, 4, false), result.get(1));
   }
 
   @Test
@@ -191,7 +197,7 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(1, result.size());
-    assertEquals(new StringLiteral(1, "hello world"), result.get(0));
+    assertEquals(new StringLiteral(1, 1, "hello world"), result.get(0));
   }
 
   @Test
@@ -200,7 +206,7 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(1, result.size());
-    assertEquals(new StringLiteral(1, "line1\nline2\ttab\"quote\\backslash"), result.get(0));
+    assertEquals(new StringLiteral(1, 1, "line1\nline2\ttab\"quote\\backslash"), result.get(0));
   }
 
   @Test
@@ -209,12 +215,12 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(6, result.size());
-    assertEquals(new LeftParen(1), result.get(0));
-    assertEquals(new Symbol(1, "if"), result.get(1));
-    assertEquals(new BooleanLiteral(1, true), result.get(2));
-    assertEquals(new StringLiteral(1, "yes"), result.get(3));
-    assertEquals(new StringLiteral(1, "no"), result.get(4));
-    assertEquals(new RightParen(1), result.get(5));
+    assertEquals(new LeftParen(1, 1), result.get(0));
+    assertEquals(new Symbol(1, 2, "if"), result.get(1));
+    assertEquals(new BooleanLiteral(1, 5, true), result.get(2));
+    assertEquals(new StringLiteral(1, 8, "yes"), result.get(3));
+    assertEquals(new StringLiteral(1, 14, "no"), result.get(4));
+    assertEquals(new RightParen(1, 18), result.get(5));
   }
 
   @Test
@@ -223,15 +229,15 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(9, result.size());
-    assertEquals(new LeftParen(1), result.get(0));
-    assertEquals(new Symbol(1, "add"), result.get(1));
-    assertEquals(new LeftParen(1), result.get(2));
-    assertEquals(new Symbol(1, "mul"), result.get(3));
-    assertEquals(new NumberLiteral(1, 2), result.get(4));
-    assertEquals(new NumberLiteral(1, 3), result.get(5));
-    assertEquals(new RightParen(1), result.get(6));
-    assertEquals(new NumberLiteral(1, 4), result.get(7));
-    assertEquals(new RightParen(1), result.get(8));
+    assertEquals(new LeftParen(1, 1), result.get(0));
+    assertEquals(new Symbol(1, 2, "add"), result.get(1));
+    assertEquals(new LeftParen(1, 5), result.get(2));
+    assertEquals(new Symbol(1, 6, "mul"), result.get(3));
+    assertEquals(new NumberLiteral(1, 10, 2), result.get(4));
+    assertEquals(new NumberLiteral(1, 12, 3), result.get(5));
+    assertEquals(new RightParen(1, 13), result.get(6));
+    assertEquals(new NumberLiteral(1, 14, 4), result.get(7));
+    assertEquals(new RightParen(1, 15), result.get(8));
   }
 
   @Test
@@ -240,12 +246,12 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(6, result.size());
-    assertEquals(new Symbol(1, "add+"), result.get(0));
-    assertEquals(new Symbol(1, "sub-"), result.get(1));
-    assertEquals(new Symbol(1, "mul*"), result.get(2));
-    assertEquals(new Symbol(1, "div/"), result.get(3));
-    assertEquals(new Symbol(1, "eq?"), result.get(4));
-    assertEquals(new Symbol(1, "set!"), result.get(5));
+    assertEquals(new Symbol(1, 1, "add+"), result.get(0));
+    assertEquals(new Symbol(1, 6, "sub-"), result.get(1));
+    assertEquals(new Symbol(1, 11, "mul*"), result.get(2));
+    assertEquals(new Symbol(1, 16, "div/"), result.get(3));
+    assertEquals(new Symbol(1, 21, "eq?"), result.get(4));
+    assertEquals(new Symbol(1, 25, "set!"), result.get(5));
   }
 
   @Test
@@ -254,11 +260,11 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(5, result.size());
-    assertEquals(new LeftParen(1), result.get(0));
-    assertEquals(new Symbol(1, "-"), result.get(1));
-    assertEquals(new NumberLiteral(1, 5), result.get(2));
-    assertEquals(new NumberLiteral(1, 3), result.get(3));
-    assertEquals(new RightParen(1), result.get(4));
+    assertEquals(new LeftParen(1, 1), result.get(0));
+    assertEquals(new Symbol(1, 2, "-"), result.get(1));
+    assertEquals(new NumberLiteral(1, 4, 5), result.get(2));
+    assertEquals(new NumberLiteral(1, 6, 3), result.get(3));
+    assertEquals(new RightParen(1, 7), result.get(4));
   }
 
   @Test
@@ -267,7 +273,7 @@ class TokenizerTest {
     List<Token> result = Tokenizer.tokens(input).toList();
 
     assertEquals(2, result.size());
-    assertEquals(new Symbol(1, "#true"), result.get(0));
-    assertEquals(new Symbol(1, "#false"), result.get(1));
+    assertEquals(new Symbol(1, 1, "#true"), result.get(0));
+    assertEquals(new Symbol(1, 7, "#false"), result.get(1));
   }
 }
