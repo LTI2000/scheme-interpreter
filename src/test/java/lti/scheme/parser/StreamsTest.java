@@ -48,7 +48,6 @@ class StreamsTest {
   void numberedLinesAddsLineNumbers() {
     Stream<String> input = Stream.of("first", "second", "third");
     List<NumberedLine> result = Streams.numberedLines(input).toList();
-
     assertEquals(3, result.size());
     assertEquals(new NumberedLine(1, "first"), result.get(0));
     assertEquals(new NumberedLine(2, "second"), result.get(1));
@@ -66,7 +65,6 @@ class StreamsTest {
   void numberedLinesSingleLine() {
     Stream<String> input = Stream.of("only line");
     List<NumberedLine> result = Streams.numberedLines(input).toList();
-
     assertEquals(1, result.size());
     assertEquals(new NumberedLine(1, "only line"), result.getFirst());
   }
@@ -83,7 +81,6 @@ class StreamsTest {
     BufferedReader reader = new BufferedReader(new StringReader("alpha\nbeta\ngamma"));
     try (Stream<String> lines = Streams.lines(reader)) {
       List<NumberedLine> result = Streams.numberedLines(lines).toList();
-
       assertEquals(4, result.size());
       assertEquals(new NumberedLine(1, "alpha"), result.get(0));
       assertEquals(new NumberedLine(2, "beta"), result.get(1));

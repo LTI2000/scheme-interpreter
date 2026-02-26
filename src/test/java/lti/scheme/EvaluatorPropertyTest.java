@@ -12,7 +12,6 @@ import net.jqwik.api.Provide;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EvaluatorPropertyTest {
-
   private final Evaluator evaluator = new Evaluator();
 
   @Property

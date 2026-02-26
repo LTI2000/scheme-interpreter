@@ -15,27 +15,21 @@ public final class Tokenizer {
     List<Token> tokens = new ArrayList<>();
     String line = numberedLine.content();
     int lineNum = numberedLine.lineNumber();
-
     if (line == null) {
       return Stream.of(new Token.Eof(lineNum, 1));
     }
-
     int i = 0;
-
     while (i < line.length()) {
       char c = line.charAt(i);
-
       // Skip whitespace
       if (Character.isWhitespace(c)) {
         i++;
         continue;
       }
-
       // Comment - skip rest of line
       if (c == ';') {
         break;
       }
-
       // Parentheses
       if (c == '(') {
         tokens.add(new Token.LeftParen(lineNum, i + 1));
@@ -47,14 +41,12 @@ public final class Tokenizer {
         i++;
         continue;
       }
-
       // Quote
       if (c == '\'') {
         tokens.add(new Token.Quote(lineNum, i + 1));
         i++;
         continue;
       }
-
       // String literal
       if (c == '"') {
         int start = i;
@@ -84,7 +76,6 @@ public final class Tokenizer {
         tokens.add(new Token.StringLiteral(lineNum, start + 1, sb.toString()));
         continue;
       }
-
       // Number (including negative numbers)
       if (Character.isDigit(c) || (c == '-' && i + 1 < line.length() && Character.isDigit(line.charAt(i + 1)))) {
         int start = i;
@@ -105,7 +96,6 @@ public final class Tokenizer {
           i = start;
         }
       }
-
       // Boolean
       if (c == '#' && i + 1 < line.length()) {
         char next = line.charAt(i + 1);
@@ -118,7 +108,6 @@ public final class Tokenizer {
           }
         }
       }
-
       // Symbol (identifier)
       int start = i;
       while (i < line.length() && !isDelimiter(line.charAt(i))) {
@@ -127,7 +116,6 @@ public final class Tokenizer {
       String symbol = line.substring(start, i);
       tokens.add(new Token.Symbol(lineNum, start + 1, symbol));
     }
-
     return tokens.stream();
   }
 
