@@ -7,28 +7,22 @@ import lti.scheme.Expression.Literal;
 import lti.scheme.Expression.Variable;
 import lti.scheme.Value.Bool;
 import lti.scheme.Value.Symbol;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EvaluatorTest {
-  @BeforeEach
-  void setUp() {}
-
-  @AfterEach
-  void tearDown() {}
-
   @Test
   void evalLiteral() {
     Value val = new Symbol("x");
+
     assertEquals(val, new Evaluator().eval(new Literal(val), null, v -> v));
   }
 
   @Test
   void evalVariable() {
     Symbol sym = new Symbol("x");
+
     assertEquals(sym, new Evaluator().eval(new Variable(sym), name -> name, v -> v));
   }
 
@@ -38,7 +32,6 @@ class EvaluatorTest {
         new Environment() {
           @Override
           public Value lookup(Symbol name) {
-            // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'lookup'");
           }
 
@@ -46,6 +39,7 @@ class EvaluatorTest {
             return "#<environment>";
           }
         }, v -> v);
+
     assertEquals("Closure[formal=Symbol[name=x], body=Variable[name=Symbol[name=x]], env=#<environment>]",
         closure.toString());
   }
@@ -61,6 +55,7 @@ class EvaluatorTest {
   void evalConditional() {
     Symbol yes = new Symbol("yes");
     Symbol no = new Symbol("no");
+
     assertEquals(yes, new Evaluator()
         .eval(new Conditional(new Literal(new Bool(true)), new Literal(yes), new Literal(no)), null, v -> v));
     assertEquals(no, new Evaluator()

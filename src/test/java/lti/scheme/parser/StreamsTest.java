@@ -16,6 +16,7 @@ class StreamsTest {
   @Test
   void linesReturnsStreamOfLinesEndingWithNull() {
     BufferedReader reader = new BufferedReader(new StringReader("line1\nline2\nline3"));
+
     try (Stream<String> lines = Streams.lines(reader)) {
       List<String> result = lines.toList();
       assertEquals(4, result.size());
@@ -29,6 +30,7 @@ class StreamsTest {
   @Test
   void linesReturnsStreamWithOnlyNullForEmptyReader() {
     BufferedReader reader = new BufferedReader(new StringReader(""));
+
     try (Stream<String> lines = Streams.lines(reader)) {
       List<String> result = lines.toList();
       assertEquals(1, result.size());
@@ -41,6 +43,7 @@ class StreamsTest {
     BufferedReader reader = new BufferedReader(new StringReader("test"));
     Stream<String> lines = Streams.lines(reader);
     lines.close();
+
     assertThrows(IOException.class, reader::read);
   }
 
@@ -48,6 +51,7 @@ class StreamsTest {
   void numberedLinesAddsLineNumbers() {
     Stream<String> input = Stream.of("first", "second", "third");
     List<NumberedLine> result = Streams.numberedLines(input).toList();
+
     assertEquals(3, result.size());
     assertEquals(new NumberedLine(1, "first"), result.get(0));
     assertEquals(new NumberedLine(2, "second"), result.get(1));
@@ -58,6 +62,7 @@ class StreamsTest {
   void numberedLinesReturnsEmptyStreamForEmptyInput() {
     Stream<String> input = Stream.empty();
     List<NumberedLine> result = Streams.numberedLines(input).toList();
+
     assertTrue(result.isEmpty());
   }
 
@@ -65,6 +70,7 @@ class StreamsTest {
   void numberedLinesSingleLine() {
     Stream<String> input = Stream.of("only line");
     List<NumberedLine> result = Streams.numberedLines(input).toList();
+
     assertEquals(1, result.size());
     assertEquals(new NumberedLine(1, "only line"), result.getFirst());
   }
@@ -72,6 +78,7 @@ class StreamsTest {
   @Test
   void numberedLineRecordHasCorrectAccessors() {
     NumberedLine line = new NumberedLine(42, "content");
+
     assertEquals(42, line.lineNumber());
     assertEquals("content", line.content());
   }
@@ -79,6 +86,7 @@ class StreamsTest {
   @Test
   void linesAndNumberedLinesIntegration() {
     BufferedReader reader = new BufferedReader(new StringReader("alpha\nbeta\ngamma"));
+
     try (Stream<String> lines = Streams.lines(reader)) {
       List<NumberedLine> result = Streams.numberedLines(lines).toList();
       assertEquals(4, result.size());
